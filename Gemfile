@@ -11,6 +11,7 @@ gem 'active_storage_validations', '~> 1.1', '>= 1.1.4'
 gem 'blueprinter', '~> 1.1', '>= 1.1.2'
 gem 'bootsnap', require: false
 gem 'devise', '~> 4.9'
+gem 'devise-jwt', '~> 0.11.0'
 gem 'pagy', '~> 9.3'
 gem 'pg', '~> 1.1'
 gem 'pg_search', '~> 2.3', '>= 2.3.6'
