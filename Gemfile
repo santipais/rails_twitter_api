@@ -16,6 +16,7 @@ gem 'pagy', '~> 9.3'
 gem 'pg', '~> 1.1'
 gem 'pg_search', '~> 2.3', '>= 2.3.6'
 gem 'puma', '~> 5.0'
+gem 'rack-cors', '~> 1.1', '>= 1.1.1'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 group :development, :test do
