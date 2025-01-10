@@ -2,11 +2,13 @@
 
 module FakeSession
   extend ActiveSupport::Concern
+
   class FakeRackSession < Hash
     def enabled?
       false
     end
   end
+
   included do
     before_action :set_fake_rack_session_for_devise
 

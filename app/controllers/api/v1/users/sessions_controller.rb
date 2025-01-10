@@ -5,8 +5,8 @@ module Api
     module Users
       class SessionsController < Devise::SessionsController
         include FakeSession
-        skip_before_action :verify_authenticity_token, with: :null_session
 
+        skip_before_action :verify_authenticity_token, with: :null_session
         respond_to :json
 
         def respond_with(resource, _opts = {})

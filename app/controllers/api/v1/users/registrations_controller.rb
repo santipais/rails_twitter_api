@@ -5,6 +5,7 @@ module Api
     module Users
       class RegistrationsController < Devise::RegistrationsController
         include FakeSession
+
         skip_before_action :verify_authenticity_token, with: :null_session
         respond_to :json
 
