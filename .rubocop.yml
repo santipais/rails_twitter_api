@@ -2,6 +2,7 @@ require: rubocop-rails
 
 AllCops:
   NewCops: enable
+  MigratedSchemaVersion: '20250109155457'
 
 Layout/LineLength:
   Max: 160
