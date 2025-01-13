@@ -28,11 +28,20 @@ RSpec.describe 'POST /api/v1/users', type: :request do
       expect { subject }.to change(User, :count).from(0).to(1)
     end
 
+    it 'creates an unconfirmed user' do
+      subject
+      expect(User.last.confirmed?).to eq(false)
+    end
+
     it 'returns a user' do
       subject
       expect(json_response[:id]).not_to be_nil
       expect(json_response[:email]).to eq(email)
       expect(json_response[:created_at]).to eq(User.last.created_at.to_s)
+    end
+
+    it 'sends a confirmation email' do
+      expect { subject }.to change(ActionMailer::Base.deliveries, :count).from(0).to(1)
     end
   end
 
