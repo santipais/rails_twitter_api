@@ -6,6 +6,7 @@ RSpec.describe 'POST /api/v1/users/sign_in', type: :request do
   let(:user) { create(:user) }
   let(:email) { user.email }
   let(:password) { user.password }
+  let(:json_response) { json }
   let(:params) do
     {
       user: { email:, password: }
@@ -22,9 +23,9 @@ RSpec.describe 'POST /api/v1/users/sign_in', type: :request do
 
     it 'returns the user' do
       subject
-      expect(json[:id]).to eq(user.id)
-      expect(json[:email]).to eq(user.email)
-      expect(json[:created_at]).to eq(User.last.created_at.to_s)
+      expect(json_response[:id]).to eq(user.id)
+      expect(json_response[:email]).to eq(user.email)
+      expect(json_response[:created_at]).to eq(User.last.created_at.to_s)
     end
 
     it 'returns a valid client and access token' do
@@ -44,7 +45,7 @@ RSpec.describe 'POST /api/v1/users/sign_in', type: :request do
 
       it 'returns an error message' do
         subject
-        expect(json[:error]).to eq('Invalid Email or password.')
+        expect(json_response[:error]).to eq('Invalid Email or password.')
       end
 
       it 'does not return a valid client and access token' do
@@ -63,7 +64,7 @@ RSpec.describe 'POST /api/v1/users/sign_in', type: :request do
 
       it 'returns an error message' do
         subject
-        expect(json[:error]).to eq('Invalid Email or password.')
+        expect(json_response[:error]).to eq('Invalid Email or password.')
       end
 
       it 'does not return a valid client and access token' do

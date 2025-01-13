@@ -6,6 +6,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
   let(:user) { build(:user) }
   let(:email) { user.email }
   let(:password) { user.password }
+  let(:json_response) { json }
   let(:params) do
     {
       user: {
@@ -29,9 +30,9 @@ RSpec.describe 'POST /api/v1/users', type: :request do
 
     it 'returns a user' do
       subject
-      expect(json[:id]).not_to be_nil
-      expect(json[:email]).to eq(email)
-      expect(json[:created_at]).to eq(User.last.created_at.to_s)
+      expect(json_response[:id]).not_to be_nil
+      expect(json_response[:email]).to eq(email)
+      expect(json_response[:created_at]).to eq(User.last.created_at.to_s)
     end
   end
 
@@ -47,7 +48,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
 
         it 'returns an error message' do
           subject
-          expect(json[:email]).to include("can't be blank")
+          expect(json_response[:email]).to include("can't be blank")
         end
 
         it 'does not create a user' do
@@ -65,7 +66,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
 
         it 'returns an error message' do
           subject
-          expect(json[:email]).to include('has already been taken')
+          expect(json_response[:email]).to include('has already been taken')
         end
 
         it 'does not create a user' do
@@ -83,7 +84,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
 
         it 'returns an error message' do
           subject
-          expect(json[:email]).to include('is invalid')
+          expect(json_response[:email]).to include('is invalid')
         end
 
         it 'does not create a user' do
@@ -103,7 +104,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
 
         it 'returns an error message' do
           subject
-          expect(json[:password]).to include("can't be blank")
+          expect(json_response[:password]).to include("can't be blank")
         end
 
         it 'does not create a user' do
@@ -121,7 +122,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
 
         it 'returns an error message' do
           subject
-          expect(json[:password]).to include('is too short (minimum is 6 characters)')
+          expect(json_response[:password]).to include('is too short (minimum is 6 characters)')
         end
 
         it 'does not create a user' do
