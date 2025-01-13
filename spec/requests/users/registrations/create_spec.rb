@@ -6,12 +6,20 @@ RSpec.describe 'POST /api/v1/users', type: :request do
   let(:user) { build(:user) }
   let(:email) { user.email }
   let(:password) { user.password }
+  let(:username) { user.username }
+  let(:first_name) { user.first_name }
+  let(:last_name) { user.last_name }
+  let(:birthdate) { user.birthdate }
   let(:json_response) { json }
   let(:params) do
     {
       user: {
         email:,
-        password:
+        password:,
+        username:,
+        first_name:,
+        last_name:,
+        birthdate:
       }
     }
   end
@@ -38,10 +46,6 @@ RSpec.describe 'POST /api/v1/users', type: :request do
       expect(json_response[:id]).not_to be_nil
       expect(json_response[:email]).to eq(email)
       expect(json_response[:created_at]).to eq(User.last.created_at.to_s)
-    end
-
-    it 'sends a confirmation email' do
-      expect { subject }.to change(ActionMailer::Base.deliveries, :count).from(0).to(1)
     end
 
     it 'sends a confirmation email' do
