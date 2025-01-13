@@ -43,6 +43,10 @@ RSpec.describe 'POST /api/v1/users', type: :request do
     it 'sends a confirmation email' do
       expect { subject }.to change(ActionMailer::Base.deliveries, :count).from(0).to(1)
     end
+
+    it 'sends a confirmation email' do
+      expect { subject }.to change(ActionMailer::Base.deliveries, :count).from(0).to(1)
+    end
   end
 
   context 'when the params are incorrect' do
