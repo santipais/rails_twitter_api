@@ -10,12 +10,12 @@ module Api
         respond_to :json
 
         def respond_with(resource, _opts = {})
-          render json: UserSerializer.render(resource), status: :ok
+          render json: UserSerializer.render(resource, view: :simple), status: :ok
         end
 
         def respond_to_on_destroy
           if current_user
-            render json: UserSerializer.render(current_user), status: :ok
+            render json: UserSerializer.render(current_user, view: :simple), status: :ok
           else
             render json: { message: 'No active session' }, status: :not_found
           end

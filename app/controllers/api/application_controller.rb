@@ -11,8 +11,7 @@ module Api
 
     def render_not_found(exception)
       Rails.logger.info { exception }
-      model = exception.model || 'Resource'
-      render json: { error: I18n.t(:resource_not_found, model:) }, status: :not_found
+      render json: { error: I18n.t(:resource_not_found) }, status: :not_found
     end
 
     def render_record_invalid(exception)

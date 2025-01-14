@@ -11,7 +11,7 @@ module Api
 
         def respond_with(resource, _opts = {})
           if resource.persisted?
-            render json: UserSerializer.render(resource), status: :created
+            render json: UserSerializer.render(resource, view: :simple), status: :created
           else
             render json: resource.errors, status: :unprocessable_entity
           end

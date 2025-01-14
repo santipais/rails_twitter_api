@@ -17,9 +17,13 @@ RSpec.describe 'DELETE /api/v1/users/sign_out', type: :request do
 
     it 'returns the user' do
       subject
-      expect(json_response[:id]).not_to be_nil
+      expect(json_response[:id]).to eq(user.id)
       expect(json_response[:email]).to eq(user.email)
-      expect(json_response[:created_at]).to eq(User.last.created_at.to_s)
+      expect(json_response[:username]).to eq(user.username)
+      expect(json_response[:first_name]).to eq(user.first_name)
+      expect(json_response[:last_name]).to eq(user.last_name)
+      expect(json_response[:birthdate]).to eq(user.birthdate.strftime('%d/%m/%Y'))
+      expect(json_response[:created_at]).to eq(user.created_at.to_s)
     end
 
     it 'invalidates the existing JWT' do
