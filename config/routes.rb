@@ -6,4 +6,10 @@ Rails.application.routes.draw do
                                     registrations: 'api/v1/users/registrations',
                                     confirmations: 'api/v1/users/confirmations',
                                     passwords: 'api/v1/users/passwords' }
+
+  namespace :api do
+    namespace :v1 do
+      resources :users, only: %i[show]
+    end
+  end
 end

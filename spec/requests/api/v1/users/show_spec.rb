@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe 'DELETE /api/v1/users/sign_out', type: :request do
+RSpec.describe 'GET /api/v1/users/:id', type: :request do
   let(:user) { create(:user) }
-  let(:headers) { auth_header(user) }
+  let(:user_id) { user.id }
   let(:json_response) { json }
 
-  subject { delete destroy_user_session_path, headers:, as: :json }
+  subject { get api_v1_user_path(user_id) }
 
-  context 'when the user is signed in' do
+  context 'when the record exists' do
     it 'returns a successful response' do
       subject
       expect(response).to have_http_status(:success)
@@ -23,25 +23,23 @@ RSpec.describe 'DELETE /api/v1/users/sign_out', type: :request do
       expect(json_response[:first_name]).to eq(user.first_name)
       expect(json_response[:last_name]).to eq(user.last_name)
       expect(json_response[:birthdate]).to eq(user.birthdate.strftime('%d/%m/%Y'))
-      expect(json_response[:created_at]).to eq(user.created_at.to_s)
-    end
-
-    it 'invalidates the existing JWT' do
-      expect { subject }.to(change { user.reload.jti })
+      expect(json_response[:website]).to eq(user.website)
+      expect(json_response[:bio]).to eq(user.bio)
+      expect(json_response[:date_joined]).to eq(user.created_at.strftime('%d/%m/%Y'))
     end
   end
 
-  context 'when the user is not signed in' do
-    let(:headers) { {} }
+  context 'when the record does not exist' do
+    let(:user_id) { 'invalid_id' }
 
-    it 'returns an not found response' do
+    it 'returns a not found response' do
       subject
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(404)
     end
 
-    it 'returns an error message' do
+    it 'returns a not found message' do
       subject
-      expect(json_response[:message]).to eq('No active session')
+      expect(json_response[:error]).to include('Resource not found.')
     end
   end
 end
