@@ -41,6 +41,10 @@ Metrics/PerceivedComplexity:
   Exclude:
     - db/migrate/*
 
+Rails/NotNullColumn:
+  Exclude:
+   - db/migrate/*
+
 Rails/UnknownEnv:
   Environments:
     - development

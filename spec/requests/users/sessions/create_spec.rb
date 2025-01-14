@@ -45,7 +45,7 @@ RSpec.describe 'POST /api/v1/users/sign_in', type: :request do
 
       it 'returns an error message' do
         subject
-        expect(json[:error]).to eq('You have to confirm your email address before continuing.')
+        expect(json_response[:error]).to eq('You have to confirm your email address before continuing.')
       end
 
       it 'does not return a valid client and access token' do
