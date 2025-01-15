@@ -10,7 +10,7 @@ class UserSerializer < ApplicationSerializer
     field :created_at
   end
 
-  view :show do
+  view :extended do
     fields :bio, :website
     field :created_at, name: :date_joined, datetime_format: '%d/%m/%Y'
   end
