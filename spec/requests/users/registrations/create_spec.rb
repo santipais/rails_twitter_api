@@ -39,7 +39,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
       subject
       expect(user.id).not_to be_nil
       expect(user.email).to eq(email)
-      expect(user.username).to eq('')
+      expect(user.username).to be_nil
       expect(user.first_name).to eq(first_name)
       expect(user.last_name).to eq(last_name)
       expect(user.birthdate).to eq(birthdate)
@@ -54,7 +54,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
       subject
       expect(json_response[:id]).to eq(user.id)
       expect(json_response[:email]).to eq(email)
-      expect(json_response[:username]).to eq('')
+      expect(json_response[:username]).to be_nil
       expect(json_response[:first_name]).to eq(first_name)
       expect(json_response[:last_name]).to eq(last_name)
       expect(json_response[:birthdate]).to eq(birthdate.strftime('%d/%m/%Y'))

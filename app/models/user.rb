@@ -10,8 +10,8 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
-  validates :username, presence: true, length: { in: 2..20 }, uniqueness: { case_sensitive: false }, format: { with: /\A[a-zA-Z0-9_]*\z/ },
-                       if: :username_setted?
+  validates :username, presence: true, length: { in: 2..20 }, uniqueness: { case_sensitive: false }, format: { with: /\A[a-zA-Z0-9_]*\z/ }, allow_blank: true,
+                       if: -> { username.present? }
   validates :encrypted_password, presence: true
   validates :first_name, :last_name, presence: true, length: { minimum: 2 }
   validates :bio, length: { maximum: 160 }
@@ -29,10 +29,6 @@ class User < ApplicationRecord
     return errors.add(:username, :already_setted) if username_was.present?
 
     validate_username_presence
-  end
-
-  def username_setted?
-    username.present?
   end
 
   def validate_username_presence

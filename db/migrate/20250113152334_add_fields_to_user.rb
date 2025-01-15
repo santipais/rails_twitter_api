@@ -3,7 +3,7 @@
 class AddFieldsToUser < ActiveRecord::Migration[7.0]
   def change
     change_table :users, bulk: true do |t|
-      t.string :username, null: false, default: ''
+      t.string :username
       t.string :first_name, null: false
       t.string :last_name, null: false
       t.string :website
