@@ -9,6 +9,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
+  has_many :tweets, dependent: :destroy
+
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   validates :username, presence: true, length: { in: 2..20 }, uniqueness: { case_sensitive: false }, format: { with: /\A[a-zA-Z0-9_]*\z/ }, allow_blank: true,
                        if: -> { username.present? }

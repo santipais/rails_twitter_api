@@ -9,7 +9,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :users, only: %i[show update]
+      resources :users, only: %i[show update] do
+        resources :tweets, only: %i[index show]
+      end
+      resource :tweet, only: %i[create]
     end
   end
 end
