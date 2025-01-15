@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[show update] do
         resources :tweets, only: %i[index show]
       end
-      resource :tweet, only: %i[create]
+      resource :tweets, only: %i[create]
     end
   end
 end
