@@ -34,15 +34,18 @@ RSpec.describe 'PUT /api/v1/users/:id', type: :request do
 
     it 'updates the user' do
       subject
-      expect(first_name).to eq(User.last.first_name)
-      expect(last_name).to eq(User.last.last_name)
-      expect(birthdate).to eq(User.last.birthdate.strftime('%d/%m/%Y'))
-      expect(website).to eq(User.last.website)
-      expect(bio).to eq(User.last.bio)
+
+      user.reload
+      expect(first_name).to eq(user.first_name)
+      expect(last_name).to eq(user.last_name)
+      expect(birthdate).to eq(user.birthdate.strftime('%d/%m/%Y'))
+      expect(website).to eq(user.website)
+      expect(bio).to eq(user.bio)
     end
 
     it 'returns the updated user' do
       subject
+
       user.reload
       expect(json_response[:id]).to eq(user.id)
       expect(json_response[:email]).to eq(user.email)
@@ -89,42 +92,42 @@ RSpec.describe 'PUT /api/v1/users/:id', type: :request do
     context 'when the birthdate is invalid' do
       let(:birthdate) { Time.current }
 
-      it 'returns an unprocessable entity response' do
+      it 'returns a bad request response' do
         subject
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns an error message' do
         subject
-        expect(json_response[:birthdate]).to include('must be less than or equal to 18 years ago')
+        expect(json_response[:errors][:birthdate]).to include('must be less than or equal to 18 years ago')
       end
     end
 
     context 'when the website is invalid' do
       let(:website) { 'invalid_website' }
 
-      it 'returns an unprocessable entity response' do
+      it 'returns an bad request response' do
         subject
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns an error message' do
         subject
-        expect(json_response[:website]).to include('is invalid')
+        expect(json_response[:errors][:website]).to include('is invalid')
       end
     end
 
     context 'when the bio is invalid' do
       let(:bio) { Faker::Lorem.characters(number: 161) }
 
-      it 'returns an unprocessable entity response' do
+      it 'returns an bad request response' do
         subject
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns an error message' do
         subject
-        expect(json_response[:bio]).to include('is too long (maximum is 160 characters)')
+        expect(json_response[:errors][:bio]).to include('is too long (maximum is 160 characters)')
       end
     end
   end
