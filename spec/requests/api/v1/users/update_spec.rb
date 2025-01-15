@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe 'PUT /api/v1/users/:id', type: :request do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, username: '') }
   let(:user_id) { user.id }
+  let(:username) { 'new_username' }
   let(:first_name) { 'New First Name' }
   let(:last_name) { 'New Last Name' }
   let(:birthdate) { '01/01/2000' }
@@ -15,6 +16,7 @@ RSpec.describe 'PUT /api/v1/users/:id', type: :request do
   let(:params) do
     {
       user: {
+        username:,
         first_name:,
         last_name:,
         birthdate:,
@@ -27,35 +29,57 @@ RSpec.describe 'PUT /api/v1/users/:id', type: :request do
   subject { put api_v1_user_path(user_id), params:, headers:, as: :json }
 
   context 'whent the params are correct' do
-    it 'returns a successful response' do
-      subject
-      expect(response).to have_http_status(:success)
+    context 'when the username was not already setted' do
+      it 'returns a successful response' do
+        subject
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'updates the user' do
+        subject
+
+        user.reload
+        expect(username).to eq(user.username)
+        expect(first_name).to eq(user.first_name)
+        expect(last_name).to eq(user.last_name)
+        expect(birthdate).to eq(user.birthdate.strftime('%d/%m/%Y'))
+        expect(website).to eq(user.website)
+        expect(bio).to eq(user.bio)
+      end
+
+      it 'returns the updated user' do
+        subject
+
+        user.reload
+        expect(json_response[:id]).to eq(user.id)
+        expect(json_response[:email]).to eq(user.email)
+        expect(json_response[:username]).to eq(user.username)
+        expect(json_response[:first_name]).to eq(user.first_name)
+        expect(json_response[:last_name]).to eq(user.last_name)
+        expect(json_response[:birthdate]).to eq(user.birthdate.strftime('%d/%m/%Y'))
+        expect(json_response[:website]).to eq(user.website)
+        expect(json_response[:bio]).to eq(user.bio)
+        expect(json_response[:date_joined]).to eq(user.created_at.strftime('%d/%m/%Y'))
+      end
     end
 
-    it 'updates the user' do
-      subject
+    context 'when the username was already setted' do
+      let(:user) { create(:user) }
 
-      user.reload
-      expect(first_name).to eq(user.first_name)
-      expect(last_name).to eq(user.last_name)
-      expect(birthdate).to eq(user.birthdate.strftime('%d/%m/%Y'))
-      expect(website).to eq(user.website)
-      expect(bio).to eq(user.bio)
-    end
+      it 'returns an unprocessable_entity response' do
+        subject
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
 
-    it 'returns the updated user' do
-      subject
+      it 'returns an error message' do
+        subject
+        expect(json_response[:username]).to include('has already been setted')
+      end
 
-      user.reload
-      expect(json_response[:id]).to eq(user.id)
-      expect(json_response[:email]).to eq(user.email)
-      expect(json_response[:username]).to eq(user.username)
-      expect(json_response[:first_name]).to eq(user.first_name)
-      expect(json_response[:last_name]).to eq(user.last_name)
-      expect(json_response[:birthdate]).to eq(user.birthdate.strftime('%d/%m/%Y'))
-      expect(json_response[:website]).to eq(user.website)
-      expect(json_response[:bio]).to eq(user.bio)
-      expect(json_response[:date_joined]).to eq(user.created_at.strftime('%d/%m/%Y'))
+      it 'does not update the user' do
+        subject
+        expect(username).not_to eq(User.last.username)
+      end
     end
   end
 
@@ -87,6 +111,11 @@ RSpec.describe 'PUT /api/v1/users/:id', type: :request do
         subject
         expect(json_response[:error]).to eq('Unauthorized.')
       end
+
+      it 'does not update the user' do
+        subject
+        expect(username).not_to eq(User.last.username)
+      end
     end
 
     context 'when the birthdate is invalid' do
@@ -100,6 +129,11 @@ RSpec.describe 'PUT /api/v1/users/:id', type: :request do
       it 'returns an error message' do
         subject
         expect(json_response[:errors][:birthdate]).to include('must be less than or equal to 18 years ago')
+      end
+
+      it 'does not update the user' do
+        subject
+        expect(birthdate).not_to eq(User.last.birthdate)
       end
     end
 
@@ -115,6 +149,11 @@ RSpec.describe 'PUT /api/v1/users/:id', type: :request do
         subject
         expect(json_response[:errors][:website]).to include('is invalid')
       end
+
+      it 'does not update the user' do
+        subject
+        expect(website).not_to eq(User.last.website)
+      end
     end
 
     context 'when the bio is invalid' do
@@ -128,6 +167,70 @@ RSpec.describe 'PUT /api/v1/users/:id', type: :request do
       it 'returns an error message' do
         subject
         expect(json_response[:errors][:bio]).to include('is too long (maximum is 160 characters)')
+      end
+
+      it 'does not update the user' do
+        subject
+        expect(bio).not_to eq(User.last.bio)
+      end
+    end
+
+    context 'when the username is incorrect' do
+      context 'when the username is missing' do
+        let(:username) { nil }
+
+        it 'returns a unprocessable entity response' do
+          subject
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it 'returns an error message' do
+          subject
+          expect(json_response[:username]).to include("can't be blank")
+        end
+
+        it 'does not update the user' do
+          subject
+          expect(username).not_to eq(User.last.username)
+        end
+      end
+
+      context 'when the username has already been taken' do
+        before { create(:user, username:) }
+
+        it 'returns a unprocessable entity response' do
+          subject
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it 'returns an error message' do
+          subject
+          expect(json_response[:username]).to include('has already been taken')
+        end
+
+        it 'does not update the user' do
+          subject
+          expect(username).not_to eq(User.last.username)
+        end
+      end
+
+      context 'when the username is invalid' do
+        let(:username) { 'invalid/username' }
+
+        it 'returns a unprocessable entity response' do
+          subject
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it 'returns an error message' do
+          subject
+          expect(json_response[:username]).to include('is invalid')
+        end
+
+        it 'does not update the user' do
+          subject
+          expect(username).not_to eq(User.last.username)
+        end
       end
     end
   end
