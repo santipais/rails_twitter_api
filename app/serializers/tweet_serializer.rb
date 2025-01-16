@@ -4,11 +4,17 @@ class TweetSerializer < ApplicationSerializer
   identifier :id
 
   field :content
-  association :user, blueprint: UserSerializer
 
-  view :show do
+  view :simple do
     field :created_at, name: :posted_ago do |tweet|
       time_ago_in_words(tweet.created_at)
     end
+  end
+
+  view :extended do
+    field :created_at, name: :posted_ago do |tweet|
+      time_ago_in_words(tweet.created_at)
+    end
+    association :user, blueprint: UserSerializer
   end
 end
