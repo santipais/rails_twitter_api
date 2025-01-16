@@ -25,6 +25,7 @@ RSpec.describe 'GET /api/v1/users/:id', type: :request do
       expect(json_response[:birthdate]).to eq(user.birthdate.strftime('%d/%m/%Y'))
       expect(json_response[:website]).to eq(user.website)
       expect(json_response[:bio]).to eq(user.bio)
+      expect(json_response[:tweets_count]).to eq(user.tweets_count)
       expect(json_response[:date_joined]).to eq(user.created_at.strftime('%d/%m/%Y'))
     end
   end
