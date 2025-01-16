@@ -40,4 +40,10 @@ en:
               must_be_less_than_or_equal_to_18_years_ago: "must be less than or equal to 18 years ago"
             username:
               already_setted: "has already been setted"
+        like:
+          attributes:
+            base:
+              cannot_like_own_tweet: "Users cannot like their own tweets"
+            user_id:
+              already_liked: "has already liked this tweet"
   resource_not_found: "Resource not found."
