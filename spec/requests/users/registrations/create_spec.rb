@@ -6,7 +6,6 @@ RSpec.describe 'POST /api/v1/users', type: :request do
   let(:user_attributes) { attributes_for(:user) }
   let(:email) { user_attributes[:email] }
   let(:password) { user_attributes[:password] }
-  let(:username) { user_attributes[:username] }
   let(:first_name) { user_attributes[:first_name] }
   let(:last_name) { user_attributes[:last_name] }
   let(:birthdate) { user_attributes[:birthdate] }
@@ -16,7 +15,6 @@ RSpec.describe 'POST /api/v1/users', type: :request do
       user: {
         email:,
         password:,
-        username:,
         first_name:,
         last_name:,
         birthdate:
@@ -41,7 +39,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
       subject
       expect(user.id).not_to be_nil
       expect(user.email).to eq(email)
-      expect(user.username).to eq(username)
+      expect(user.username).to be_nil
       expect(user.first_name).to eq(first_name)
       expect(user.last_name).to eq(last_name)
       expect(user.birthdate).to eq(birthdate)
@@ -56,7 +54,7 @@ RSpec.describe 'POST /api/v1/users', type: :request do
       subject
       expect(json_response[:id]).to eq(user.id)
       expect(json_response[:email]).to eq(email)
-      expect(json_response[:username]).to eq(username)
+      expect(json_response[:username]).to be_nil
       expect(json_response[:first_name]).to eq(first_name)
       expect(json_response[:last_name]).to eq(last_name)
       expect(json_response[:birthdate]).to eq(birthdate.strftime('%d/%m/%Y'))
@@ -155,62 +153,6 @@ RSpec.describe 'POST /api/v1/users', type: :request do
         it 'returns an error message' do
           subject
           expect(json_response[:password]).to include('is too short (minimum is 6 characters)')
-        end
-
-        it 'does not create a user' do
-          expect { subject }.not_to change(User, :count)
-        end
-      end
-    end
-
-    context 'when the username is incorrect' do
-      context 'when the username is missing' do
-        let(:username) { nil }
-
-        it 'returns a unprocessable entity response' do
-          subject
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it 'returns an error message' do
-          subject
-          expect(json_response[:username]).to include("can't be blank")
-        end
-
-        it 'does not create a user' do
-          expect { subject }.not_to change(User, :count)
-        end
-      end
-
-      context 'when the username has already been taken' do
-        before { create(:user, username:) }
-
-        it 'returns a unprocessable entity response' do
-          subject
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it 'returns an error message' do
-          subject
-          expect(json_response[:username]).to include('has already been taken')
-        end
-
-        it 'does not create a user' do
-          expect { subject }.not_to change(User, :count)
-        end
-      end
-
-      context 'when the username is invalid' do
-        let(:username) { 'invalid/username' }
-
-        it 'returns a unprocessable entity response' do
-          subject
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it 'returns an error message' do
-          subject
-          expect(json_response[:username]).to include('is invalid')
         end
 
         it 'does not create a user' do

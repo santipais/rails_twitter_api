@@ -21,7 +21,7 @@ module Api
 
         def sign_up_params
           params.require(resource_name)
-                .permit(:email, :username, :password, :birthdate, :website, :bio, :first_name, :last_name)
+                .permit(:email, :password, :birthdate, :website, :bio, :first_name, :last_name)
         end
       end
     end

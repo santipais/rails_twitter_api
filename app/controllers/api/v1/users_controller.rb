@@ -18,7 +18,7 @@ module Api
       private
 
       def update_params
-        params.require(:user).permit(:birthdate, :website, :bio, :first_name, :last_name)
+        params.require(:user).permit(:username, :birthdate, :website, :bio, :first_name, :last_name)
       end
 
       def user
