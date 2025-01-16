@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe 'GET /api/v1/tweets/:id', type: :request do
-  include ActionView::Helpers::DateHelper
-
   let(:tweet) { create(:tweet) }
   let(:tweet_id) { tweet.id }
   let(:user) { create(:user) }

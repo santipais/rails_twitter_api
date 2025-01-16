@@ -70,4 +70,5 @@ RSpec.configure do |config|
 
   config.include RequestHelper, type: :request
   config.include AuthHelper, type: :request
+  config.include ActionView::Helpers::DateHelper, type: :request
 end

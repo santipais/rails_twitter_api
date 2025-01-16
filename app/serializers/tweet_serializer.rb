@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class TweetSerializer < ApplicationSerializer
-  extend ActionView::Helpers::DateHelper
-
   identifier :id
 
   field :content
