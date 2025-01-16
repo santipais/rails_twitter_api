@@ -47,6 +47,10 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'associations' do
+    it { is_expected.to have_many(:tweets).dependent(:destroy) }
+  end
+
   describe '#full_name' do
     subject { build(:user, first_name: 'John', last_name: 'Doe') }
 
