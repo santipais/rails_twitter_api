@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :tweet do
-    content { Faker::Lorem.sentence(word_count: 1..5) }
+    content { Faker::Books::Dune.quote.truncate(280) }
     user { build(:user) }
   end
 end

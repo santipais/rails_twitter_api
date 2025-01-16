@@ -3,15 +3,16 @@
 class UserSerializer < ApplicationSerializer
   identifier :id
 
-  fields :email, :username, :first_name, :last_name
-  field :birthdate, datetime_format: '%d/%m/%Y'
+  fields :username, :first_name, :last_name
 
   view :simple do
-    field :created_at
+    fields :email, :bio, :website, :created_at
+    field :birthdate, datetime_format: '%d/%m/%Y'
   end
 
-  view :extended do
-    fields :bio, :website
+  view :show do
+    fields :email, :bio, :website
+    field :birthdate, datetime_format: '%d/%m/%Y'
     field :created_at, name: :date_joined, datetime_format: '%d/%m/%Y'
   end
 end
