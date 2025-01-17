@@ -7,12 +7,12 @@ module Api
       before_action :correct_user?, only: :update
 
       def show
-        render json: UserSerializer.render(user, view: :extended)
+        render json: UserSerializer.render(user, view: :show), status: :ok
       end
 
       def update
         user.update!(update_params)
-        render(json: UserSerializer.render(user, view: :extended), status: :ok)
+        render(json: UserSerializer.render(user, view: :simple), status: :ok)
       end
 
       private
