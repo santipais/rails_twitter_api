@@ -13,8 +13,8 @@ RSpec.describe 'GET /api/v1/users/:user_id/tweets', type: :request do
 
   subject { get api_v1_user_tweets_path(user_id), headers:, as: :json }
 
-  context 'when the params are correct' do
-    context 'when the user is authenticated' do
+  context 'when the user is authenticated' do
+    context 'when the user_id is valid' do
       context 'when the user has tweets' do
         let!(:tweets) { create_list(:tweet, 2, user: user).sort_by(&:created_at).reverse }
 
@@ -48,22 +48,6 @@ RSpec.describe 'GET /api/v1/users/:user_id/tweets', type: :request do
       end
     end
 
-    context 'when the user is not authenticated' do
-      let(:headers) { {} }
-
-      it 'returns an unauthorized response' do
-        subject
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it 'returns an unauthorized message' do
-        subject
-        expect(json_response[:error]).to include('You need to sign in or sign up before continuing.')
-      end
-    end
-  end
-
-  context 'when the params are incorrect' do
     context 'when the user_id is invalid' do
       let(:user_id) { 'invalid_id' }
 
@@ -76,6 +60,20 @@ RSpec.describe 'GET /api/v1/users/:user_id/tweets', type: :request do
         subject
         expect(json_response[:error]).to include('Resource not found.')
       end
+    end
+  end
+
+  context 'when the user is not authenticated' do
+    let(:headers) { {} }
+
+    it 'returns an unauthorized response' do
+      subject
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'returns an unauthorized message' do
+      subject
+      expect(json_response[:error]).to include('You need to sign in or sign up before continuing.')
     end
   end
 end
