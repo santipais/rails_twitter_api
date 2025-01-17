@@ -2,6 +2,11 @@
 
 module RequestHelper
   def json
-    response.parsed_body.deep_symbolize_keys
+    body = response.parsed_body
+    if body.is_a?(Array)
+      body.map(&:deep_symbolize_keys)
+    else
+      body.deep_symbolize_keys
+    end
   end
 end

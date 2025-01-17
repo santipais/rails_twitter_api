@@ -5,12 +5,12 @@ module Api
     class TweetsController < ApiController
       def show
         tweet = Tweet.find(params[:id])
-        render json: TweetSerializer.render(tweet, view: :show), status: :ok
+        render json: TweetSerializer.render(tweet, view: :extended), status: :ok
       end
 
       def create
         tweet = current_user.tweets.create!(tweet_params)
-        render json: TweetSerializer.render(tweet), status: :created
+        render json: TweetSerializer.render(tweet, view: :extended), status: :created
       end
 
       private

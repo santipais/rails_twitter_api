@@ -40,6 +40,7 @@ RSpec.describe 'POST /api/v1/tweets', type: :request do
         subject
         expect(json_response[:id]).to eq(tweet.id)
         expect(json_response[:content]).to eq(content)
+        expect(json_response[:posted_ago]).not_to be_nil
         expect(json_response[:user][:id]).to eq(user.id)
       end
     end
