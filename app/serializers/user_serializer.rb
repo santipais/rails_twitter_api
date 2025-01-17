@@ -11,7 +11,7 @@ class UserSerializer < ApplicationSerializer
   end
 
   view :show do
-    fields :email, :bio, :website
+    fields :email, :bio, :website, :tweets_count
     field :birthdate, datetime_format: '%d/%m/%Y'
     field :created_at, name: :date_joined, datetime_format: '%d/%m/%Y'
   end
