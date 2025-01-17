@@ -46,5 +46,4 @@ en:
               cannot_like_own_tweet: "Users cannot like their own tweets"
             user_id:
               already_liked: "has already liked this tweet"
-  not_liked: "User has not liked this tweet"
   resource_not_found: "Resource not found."
