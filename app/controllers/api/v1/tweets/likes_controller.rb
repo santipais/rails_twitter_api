@@ -5,22 +5,14 @@ module Api
     module Tweets
       class LikesController < ApiController
         def create
-          like = tweet.likes.create(user: current_user)
-          if like.valid?
-            render status: :no_content
-          else
-            render json: { errors: like.errors.full_messages }, status: :unprocessable_entity
-          end
+          tweet.likes.create!(user: current_user)
+          head :no_content
         end
 
         def destroy
-          like = tweet.likes.find_by(user: current_user)
-          if like
-            like.destroy!
-            render status: :no_content
-          else
-            render json: { errors: I18n.t(:not_liked) }, status: :unprocessable_entity
-          end
+          like = tweet.likes.find_by!(user: current_user)
+          like.destroy!
+          render status: :no_content
         end
 
         private

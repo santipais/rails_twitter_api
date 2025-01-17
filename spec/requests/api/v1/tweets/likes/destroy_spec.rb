@@ -22,7 +22,7 @@ RSpec.describe 'DELETE /api/v1/tweets/:tweet_id/likes', type: :request do
         end
 
         it 'deletes the like' do
-          expect { subject }.to change(Like, :count).from(1).to(0)
+          expect { subject }.to change(tweet.reload.likes, :count).from(1).to(0)
         end
 
         it 'returns no content' do
@@ -32,18 +32,18 @@ RSpec.describe 'DELETE /api/v1/tweets/:tweet_id/likes', type: :request do
       end
 
       context 'when the user has not liked the tweet' do
-        it 'returns a unprocessable entity response' do
+        it 'returns a not found response' do
           subject
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:not_found)
         end
 
         it 'returns an error message' do
           subject
-          expect(json_response[:errors]).to include('User has not liked this tweet')
+          expect(json_response[:error]).to include('Resource not found.')
         end
 
         it 'does not delete a like' do
-          expect { subject }.not_to change(Like, :count)
+          expect { subject }.not_to change(tweet.reload.likes, :count)
         end
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe 'DELETE /api/v1/tweets/:tweet_id/likes', type: :request do
       end
 
       it 'does not delete a like' do
-        expect { subject }.not_to change(Like, :count)
+        expect { subject }.not_to change(tweet.reload.likes, :count)
       end
     end
   end

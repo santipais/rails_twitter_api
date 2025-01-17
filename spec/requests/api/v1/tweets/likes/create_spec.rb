@@ -20,13 +20,13 @@ RSpec.describe 'POST /api/v1/tweets/:tweet_id/likes', type: :request do
         end
 
         it 'creates a new like' do
-          expect { subject }.to change(Like, :count).from(0).to(1)
+          expect { subject }.to change(tweet.reload.likes, :count).from(0).to(1)
         end
 
         it 'creates a like with the correct attributes' do
           subject
 
-          like = Like.last
+          like = tweet.reload.likes.last
           expect(like.id).not_to be_nil
           expect(like.tweet).to eq(tweet)
           expect(like.user).to eq(user)
@@ -42,36 +42,36 @@ RSpec.describe 'POST /api/v1/tweets/:tweet_id/likes', type: :request do
         context 'when the user has already liked the tweet' do
           let!(:like) { create(:like, tweet:, user:) }
 
-          it 'returns a unprocessable entity response' do
+          it 'returns a bad_request response' do
             subject
-            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response).to have_http_status(:bad_request)
           end
 
           it 'returns an error message' do
             subject
-            expect(json_response[:errors]).to include('User has already liked this tweet')
+            expect(json_response[:errors][:user_id]).to include('has already liked this tweet')
           end
 
           it 'does not create a new like' do
-            expect { subject }.not_to change(Like, :count)
+            expect { subject }.not_to change(tweet.reload.likes, :count)
           end
         end
 
         context 'when the tweet is from the user' do
           let(:tweet) { create(:tweet, user: user) }
 
-          it 'returns a unprocessable entity response' do
+          it 'returns a bad_request response' do
             subject
-            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response).to have_http_status(:bad_request)
           end
 
           it 'returns an error message' do
             subject
-            expect(json_response[:errors]).to include('Users cannot like their own tweets')
+            expect(json_response[:errors][:base]).to include('Users cannot like their own tweets')
           end
 
           it 'does not create a new like' do
-            expect { subject }.not_to change(Like, :count)
+            expect { subject }.not_to change(tweet.reload.likes, :count)
           end
         end
       end
@@ -91,7 +91,7 @@ RSpec.describe 'POST /api/v1/tweets/:tweet_id/likes', type: :request do
       end
 
       it 'does not create a new like' do
-        expect { subject }.not_to change(Like, :count)
+        expect { subject }.not_to change(tweet.reload.likes, :count)
       end
     end
   end
