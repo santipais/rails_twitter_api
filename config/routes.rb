@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: %i[show update] do
         resources :tweets, only: %i[index], controller: 'users/tweets'
-        resource :follows, only: %i[create destroy], controller: 'users/follows'
+        resource :follow, only: %i[create destroy], controller: 'users/follows'
       end
       resources :tweets, only: %i[create show]
     end
