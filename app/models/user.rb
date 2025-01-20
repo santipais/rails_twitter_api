@@ -10,6 +10,8 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_many :tweets, dependent: :destroy
+  has_many :likes, dependent: :destroy
+  has_many :liked_tweets, through: :likes, source: :tweet
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   validates :username, presence: true, length: { in: 2..20 }, uniqueness: { case_sensitive: false }, format: { with: /\A[a-zA-Z0-9_]*\z/ }, allow_blank: true,

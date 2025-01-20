@@ -49,6 +49,8 @@ RSpec.describe User, type: :model do
 
   describe 'associations' do
     it { is_expected.to have_many(:tweets).dependent(:destroy) }
+    it { is_expected.to have_many(:likes).dependent(:destroy) }
+    it { is_expected.to have_many(:liked_tweets).through(:likes).source(:tweet) }
   end
 
   describe '#full_name' do
