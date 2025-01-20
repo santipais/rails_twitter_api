@@ -32,6 +32,6 @@ RSpec.describe Like, type: :model do
 
   describe 'associations' do
     it { is_expected.to belong_to(:user) }
-    it { is_expected.to belong_to(:tweet) }
+    it { is_expected.to belong_to(:tweet).counter_cache(true) }
   end
 end

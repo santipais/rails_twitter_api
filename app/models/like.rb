@@ -2,7 +2,7 @@
 
 class Like < ApplicationRecord
   belongs_to :user
-  belongs_to :tweet
+  belongs_to :tweet, counter_cache: true
 
   validates :user_id, uniqueness: { scope: :tweet_id, message: :already_liked }
   validate :validate_user_cannot_like_own_tweet
