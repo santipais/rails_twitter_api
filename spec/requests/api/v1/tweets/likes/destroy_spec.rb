@@ -14,7 +14,7 @@ RSpec.describe 'DELETE /api/v1/tweets/:tweet_id/likes', type: :request do
   context 'when the user is authenticated' do
     context 'when tweet_id is valid' do
       context 'when the user has liked the tweet' do
-        before { create(:like, tweet: tweet, user: user) }
+        let!(:like) { create(:like, tweet: tweet, user: user) }
 
         it 'returns a no content response' do
           subject
@@ -22,6 +22,12 @@ RSpec.describe 'DELETE /api/v1/tweets/:tweet_id/likes', type: :request do
         end
 
         it 'deletes the like' do
+          expect(like).not_to be_nil
+          expect { subject }.to change(tweet.reload.likes, :count).from(1).to(0)
+          expect(tweet.reload.likes.find_by(id: like.id)).to be_nil
+        end
+
+        it 'deletes the correct like' do
           expect { subject }.to change(tweet.reload.likes, :count).from(1).to(0)
         end
 
@@ -32,6 +38,24 @@ RSpec.describe 'DELETE /api/v1/tweets/:tweet_id/likes', type: :request do
       end
 
       context 'when the user has not liked the tweet' do
+        it 'returns a not found response' do
+          subject
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it 'returns an error message' do
+          subject
+          expect(json_response[:error]).to include('Resource not found.')
+        end
+
+        it 'does not delete a like' do
+          expect { subject }.not_to change(tweet.reload.likes, :count)
+        end
+      end
+
+      context 'when the user is the owner of the tweet' do
+        let(:tweet) { create(:tweet, user: user) }
+
         it 'returns a not found response' do
           subject
           expect(response).to have_http_status(:not_found)
