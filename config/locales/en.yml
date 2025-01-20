@@ -46,4 +46,10 @@ en:
               cannot_like_own_tweet: "Users cannot like their own tweets"
             user_id:
               already_liked: "has already liked this tweet"
+        follow:
+          attributes:
+            base:
+              cannot_follow_self: "Users cannot follow themselves"
+            user_id:
+              already_followed: "has already followed this user"
   resource_not_found: "Resource not found."
