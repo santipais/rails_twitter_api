@@ -14,7 +14,8 @@ require 'action_mailbox/engine'
 require 'action_text/engine'
 require 'action_view/railtie'
 require 'action_cable/engine'
-# require "rails/test_unit/railtie"
+require 'sprockets/railtie'
+# require 'rails/test_unit/railtie'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -37,5 +38,12 @@ module RailsTwitterApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # reenable cookies and sessions for web interfaces (sidekiq web and admin portals)
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Flash
+    config.middleware.use ActionDispatch::Session::CookieStore
+    config.middleware.insert_after(Rack::Runtime, Rack::MethodOverride)
+    config.middleware.insert_after(ActionDispatch::Cookies, ActionDispatch::Session::CookieStore)
   end
 end
