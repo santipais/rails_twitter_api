@@ -36,6 +36,10 @@ RSpec.describe 'POST /api/v1/tweets/:tweet_id/likes', type: :request do
           subject
           expect(response.body).to be_empty
         end
+
+        it 'updates the tweet likes count' do
+          expect { subject }.to change { tweet.reload.likes_count }.from(0).to(1)
+        end
       end
 
       context 'when the like is invalid' do

@@ -3,7 +3,7 @@
 class TweetSerializer < ApplicationSerializer
   identifier :id
 
-  field :content
+  fields :content, :likes_count
 
   view :simple do
     field :created_at, name: :posted_ago do |tweet|

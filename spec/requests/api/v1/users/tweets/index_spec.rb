@@ -31,6 +31,7 @@ RSpec.describe 'GET /api/v1/users/:user_id/tweets', type: :request do
             expect(json_response[i][:id]).to eq(tweet.id)
             expect(json_response[i][:content]).to eq(tweet.content)
             expect(json_response[i][:posted_ago]).to eq(time_ago_in_words(tweet.created_at))
+            expect(json_response[i][:likes_count]).to eq(tweet.likes_count)
           end
         end
       end

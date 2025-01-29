@@ -21,8 +21,8 @@ RSpec.describe 'GET /api/v1/tweets/:id', type: :request do
       it 'returns the tweet' do
         subject
 
-        expect(json_response.slice(:id, :content).as_json)
-          .to eq(tweet.slice(:id, :content))
+        expect(json_response.slice(:id, :content, :likes_count).as_json)
+          .to eq(tweet.slice(:id, :content, :likes_count))
         expect(json_response[:posted_ago]).to eq(time_ago_in_words(tweet.created_at))
 
         expect(json_response[:user].slice(:id, :username, :first_name, :last_name).as_json)

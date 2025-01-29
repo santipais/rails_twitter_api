@@ -35,6 +35,10 @@ RSpec.describe 'DELETE /api/v1/tweets/:tweet_id/likes', type: :request do
           subject
           expect(response.body).to be_empty
         end
+
+        it 'updates the tweet likes count' do
+          expect { subject }.to change { tweet.reload.likes_count }.from(1).to(0)
+        end
       end
 
       context 'when the user has not liked the tweet' do
